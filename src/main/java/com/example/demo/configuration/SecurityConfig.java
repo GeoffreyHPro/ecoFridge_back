@@ -61,7 +61,7 @@ public class SecurityConfig {
         @Override
         public void addCorsMappings(CorsRegistry registry) {
             registry.addMapping("/**") // Autorise toutes les routes
-                    .allowedOrigins("http://localhost:4200") // Autorise l'origine de votre application Angular
+                    .allowedOrigins("http://localhost:4200","https://ecofridge-front.onrender.com") // Autorise l'origine de votre application Angular
                     .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // Méthodes HTTP autorisées
                     .allowedHeaders("*") // Autorise tous les en-têtes
                     .allowCredentials(true); // Autorise les cookies ou l'authentification
