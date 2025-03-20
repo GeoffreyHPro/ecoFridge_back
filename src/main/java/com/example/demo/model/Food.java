@@ -44,6 +44,13 @@ public class Food {
         this.image = "default.png";
     }
 
+    public Food(String bareCode, String name, String description) {
+        this.bareCode = bareCode;
+        this.image = "default.png";
+        this.name = name;
+        this.description = description;
+    }
+
     public String getBareCode() {
         return bareCode;
     }
