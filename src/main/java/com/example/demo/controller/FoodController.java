@@ -69,9 +69,9 @@ public class FoodController {
 
     @Operation(summary = "Add new food with bareCode", description = "Give a bareCode of the food to add it")
     @PostMapping("/{bareCode}")
-    public ResponseEntity addFood(@PathVariable("bareCode") String bareCode) {
+    public ResponseEntity addFood(@PathVariable("bareCode") String bareCode, @RequestBody FoodUpdateRequest foodUpdateRequest) {
         try {
-            foodService.save(new Food(bareCode));
+            foodService.save(new Food(bareCode, foodUpdateRequest.getName(), foodUpdateRequest.getDescription()));
             MessagePayload messagePayload = new MessagePayload("Food saved");
             return ResponseEntity.status(201).body(messagePayload);
         } catch (AlreadySavedError e) {
