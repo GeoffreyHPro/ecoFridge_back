@@ -1,5 +1,6 @@
 package com.example.demo.model;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,17 +41,26 @@ public class Food {
     private List<FoodBatch> foodBatches = new ArrayList<>();
 
     public Food() {
-
     }
 
     public Food(String bareCode) {
         this.bareCode = bareCode;
+        try {
+            this.imageData = getClass().getClassLoader().getResourceAsStream("static/images/default.png")
+                    .readAllBytes();
+        } catch (IOException e) {
+        }
     }
 
     public Food(String bareCode, String name, String description) {
         this.bareCode = bareCode;
         this.name = name;
         this.description = description;
+        try {
+            this.imageData = getClass().getClassLoader().getResourceAsStream("static/images/default.png")
+                    .readAllBytes();
+        } catch (IOException e) {
+        }
     }
 
     public String getBareCode() {
