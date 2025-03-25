@@ -1,0 +1,11 @@
+services:
+  db:
+    image: mysql:8.0 
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=root_password  
+      - MYSQL_DATABASE=ecofridge_db  
+      - MYSQL_USER=ecofridge_user  
+      - MYSQL_PASSWORD=ecofridge_password 
+    ports:
+      - '3306:3306' 
