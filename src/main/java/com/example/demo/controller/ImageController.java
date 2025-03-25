@@ -14,9 +14,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.demo.error.NotFoundError;
 import com.example.demo.service.ImageService;
-
-import org.springframework.core.io.Resource;
 
 import java.io.File;
 import java.io.IOException;
@@ -37,16 +36,10 @@ public class ImageController {
     @Autowired
     private ImageService imageService;
 
-    @GetMapping("/{filename}")
-    public ResponseEntity<?> getImage(@PathVariable String filename) {
-        if (isFile(imageStoragePath + "/" + filename)) {
-            Resource file = imageService.getImage(filename);
-            return ResponseEntity.ok()
-                    .header(HttpHeaders.CONTENT_TYPE, "image/jpeg")
-                    .body(file);
-        } else {
-            return ResponseEntity.status(400).body("File not exist");
-        }
+    @GetMapping("/{barcode}")
+    public ResponseEntity<?> getImage(@PathVariable String barcode) throws NotFoundError {
+        return ResponseEntity.status(200).header(HttpHeaders.CONTENT_TYPE, "image/jpeg")
+                .body(imageService.getImage(barcode));
     }
 
     @PostMapping(path = "/upload/{bareCode}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
