@@ -1,6 +1,9 @@
 package com.example.demo.repository.foodRepository;
 
+import java.io.IOException;
 import java.util.List;
+
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.error.NotFoundError;
 import com.example.demo.model.Food;
@@ -13,7 +16,7 @@ public interface CustomFoodRepository {
 
     Food getFood(String bareCode);
 
-    void updateFoodImage(String bareCode, String image);
+    void updateFoodImage(String bareCode, MultipartFile file) throws IOException;
 
     void deleteFood(String bareCode);
 
