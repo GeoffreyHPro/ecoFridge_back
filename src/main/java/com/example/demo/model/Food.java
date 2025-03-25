@@ -1,5 +1,6 @@
 package com.example.demo.model;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,10 +9,12 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
@@ -29,26 +32,35 @@ public class Food {
 
     private String description;
 
-    private String image;
+    @Lob
+    @Column(columnDefinition = "LONGBLOB")
+    private byte[] imageData;
 
     @OneToMany(mappedBy = "food", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<FoodBatch> foodBatches = new ArrayList<>();
 
     public Food() {
-
     }
 
     public Food(String bareCode) {
         this.bareCode = bareCode;
-        this.image = "default.png";
+        try {
+            this.imageData = getClass().getClassLoader().getResourceAsStream("static/images/default.png")
+                    .readAllBytes();
+        } catch (IOException e) {
+        }
     }
 
     public Food(String bareCode, String name, String description) {
         this.bareCode = bareCode;
-        this.image = "default.png";
         this.name = name;
         this.description = description;
+        try {
+            this.imageData = getClass().getClassLoader().getResourceAsStream("static/images/default.png")
+                    .readAllBytes();
+        } catch (IOException e) {
+        }
     }
 
     public String getBareCode() {
@@ -76,14 +88,6 @@ public class Food {
         foodBatch.setFood(this);
     }
 
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
-    }
-
     public String getDescription() {
         return description;
     }
@@ -98,6 +102,14 @@ public class Food {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public byte[] getImageData() {
+        return imageData;
+    }
+
+    public void setImageData(byte[] imageData) {
+        this.imageData = imageData;
     }
 
 }

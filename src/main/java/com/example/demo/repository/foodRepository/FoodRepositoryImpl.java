@@ -1,8 +1,10 @@
 package com.example.demo.repository.foodRepository;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.error.NotFoundError;
 import com.example.demo.model.Food;
@@ -59,9 +61,9 @@ public class FoodRepositoryImpl implements CustomFoodRepository {
     }
 
     @Override
-    public void updateFoodImage(String bareCode, String image) {
+    public void updateFoodImage(String bareCode, MultipartFile file) throws IOException {
         Food food = getFood(bareCode);
-        food.setImage(image);
+        food.setImageData(file.getBytes());
         this.em.merge(food);
     }
 

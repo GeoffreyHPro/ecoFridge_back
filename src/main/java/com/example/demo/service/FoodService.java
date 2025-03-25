@@ -1,10 +1,11 @@
 package com.example.demo.service;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException.NotFound;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.error.AlreadySavedError;
 import com.example.demo.error.NotFoundError;
@@ -26,7 +27,6 @@ public class FoodService {
         if (!saved) {
             throw new AlreadySavedError();
         }
-
     }
 
     public Food getFood(String bareCode) throws NotFoundError {
@@ -37,8 +37,8 @@ public class FoodService {
         return food;
     }
 
-    public void updateFoodImage(String bareCode, String image) {
-        foodRepositoryImpl.updateFoodImage(bareCode, image);
+    public void updateFoodImage(String bareCode, MultipartFile file) throws IOException {
+        foodRepositoryImpl.updateFoodImage(bareCode, file);
     }
 
     public void deleteFood(String bareCode) {
