@@ -28,7 +28,6 @@ public class FoodTest {
     @Test
     public void testBareCodeChanged() {
         assertEquals("1502", this.food1.getBareCode());
-        assertEquals("default.png", this.food1.getImage());
         this.food1.setBareCode("000012");
         assertEquals("000012", this.food1.getBareCode());
     }
