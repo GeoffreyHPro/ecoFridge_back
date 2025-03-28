@@ -15,6 +15,7 @@ import com.example.demo.repository.foodRepository.FoodRepositoryImpl;
 import com.example.demo.repository.userRepository.UserRepository;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
@@ -43,10 +44,16 @@ public class FoodBatchRepositoryImpl implements CustomFoodBatchRepository {
             throw new Exception("Food not found");
         }
         User user = userRepository.findByEmail(username);
-        foodBatch.setUsername(user.getUsername());
-        foodBatch.setFood(food);
-        food.addFoodBatches(foodBatch);
-        this.em.persist(foodBatch);
+        FoodBatch foundFoodBatch = getFoodBatchWithParameters(bareCode, username, foodBatch.getExpirationDate());
+        if (foundFoodBatch != null) {
+            foundFoodBatch.setQuantity(foundFoodBatch.getQuantity() + foodBatch.getQuantity());
+            this.em.merge(foundFoodBatch);
+        } else {
+            foodBatch.setUsername(user.getUsername());
+            foodBatch.setFood(food);
+            food.addFoodBatches(foodBatch);
+            this.em.persist(foodBatch);
+        }
     }
 
     @Override
@@ -63,6 +70,22 @@ public class FoodBatchRepositoryImpl implements CustomFoodBatchRepository {
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("Erreur lors de l'exécution de la requête", e);
+        }
+    }
+
+    public FoodBatch getFoodBatchWithParameters(String bareCode, String username, LocalDateTime expirationDate) {
+        String request = "SELECT fb FROM Food f " +
+                "JOIN f.foodBatches fb " +
+                "WHERE f.bareCode = :bareCode AND fb.username = :username AND expirationDate = :expirationDate";
+        TypedQuery<FoodBatch> query = em.createQuery(request, FoodBatch.class);
+        query.setParameter("username", username);
+        query.setParameter("bareCode", bareCode);
+        query.setParameter("expirationDate", expirationDate);
+        try {
+            FoodBatch foodBatch = query.getSingleResult();
+            return foodBatch;
+        } catch (NoResultException e) {
+            return null;
         }
     }
 
