@@ -40,14 +40,11 @@ public class FoodBatchRepositoryImpl implements CustomFoodBatchRepository {
     public void saveFoodBatch(FoodBatch foodBatch, String bareCode, String username) throws Exception {
 
         Food food = foodRepositoryImpl.getFood(bareCode);
-        System.out.println("---------------" + food.getBareCode());
         if (food == null) {
             throw new Exception("Food not found");
         }
-        System.out.println("--------------- oui");
         User user = userRepository.findByEmail(username);
         FoodBatch foundFoodBatch = getFoodBatchWithParameters(bareCode, username, foodBatch.getExpirationDate());
-        System.out.println("--------------- fOUND");
         if (foundFoodBatch != null) {
             foundFoodBatch.setQuantity(foundFoodBatch.getQuantity() + foodBatch.getQuantity());
             this.em.merge(foundFoodBatch);
